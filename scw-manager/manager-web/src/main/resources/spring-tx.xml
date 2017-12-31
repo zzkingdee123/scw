@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+
+	<!-- 配置事物 -->
+	<!-- 1.配置事物管理器 -->
+	<bean id="TransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="ds"></property>
+	</bean>
+	
+	<!-- 2.配置事物切面-->
+ 		<aop:config>
+ 			<aop:pointcut expression="execution(* com.atgugui.scw.manager.service.*.*(..))" id="txPoint"/>
+ 			<!--  事物增强-->
+ 			<aop:advisor advice-ref="MyAdvice" pointcut-ref="txPoint"/>
+ 		</aop:config>
+ 		
+ 	<!-- 3.配置事物增强 -->
+ 		<tx:advice id="MyAdvice" transaction-manager="TransactionManager">
+ 			<tx:attributes>
+ 				<tx:method name="*"/>
+ 				<tx:method name="get*" propagation="SUPPORTS" read-only="true"/>
+ 			</tx:attributes>
+ 		</tx:advice>
+	
+</beans>
