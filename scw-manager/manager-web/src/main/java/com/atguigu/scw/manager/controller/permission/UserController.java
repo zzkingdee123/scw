@@ -7,10 +7,14 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.atguigu.project.MyStringUtils;
 import com.atguigu.scw.manager.bean.TUser;
+import com.atguigu.scw.manager.bean.TUserExample;
+import com.atguigu.scw.manager.bean.TUserExample.Criteria;
 import com.atguigu.scw.manager.constant.Constants;
 import com.atguigu.scw.manager.service.UserService;
 import com.github.pagehelper.PageHelper;
@@ -78,16 +82,42 @@ public class UserController {
     }
 
     /**
-     * 查询所有用户
+     * 查询用户,按账号或者名称过滤
      */
     @RequestMapping("/findAllUser")
-    public String findAllUser(@RequestParam(value="pn",defaultValue="1")Integer pn,@RequestParam(value="pz",defaultValue="10")Integer ps,Model model) {
+    public String findAllUser(@RequestParam(value="pn",defaultValue="1")Integer pn,
+    		@RequestParam(value="pz",defaultValue="5")Integer ps,
+    		@RequestParam(value="searchParam",defaultValue="")String search, 
+    		Model model) {
        // System.out.println("分页");
-        PageHelper.startPage(pn,ps);
-        List<TUser> userList =  userService.findAllUser();
+    	PageHelper.startPage(pn,ps);
+        
+        TUserExample example = new TUserExample();
+        Criteria criteria1 = example.createCriteria();
+        Criteria criteria2 = example.createCriteria();
+        if(!MyStringUtils.isEmpty(search)){
+        	criteria1.andLoginacctLike("%"+search+"%");
+        	criteria2.andUsernameLike("%"+search+"%");
+        }
+        example.or(criteria2);
+        
+		//List<TUser> userList =  userService.findAllUser();
+        List<TUser> userList =  userService.findUserByExample(example);
         //每页显示5页
         PageInfo<TUser> pageInfo  =  new  PageInfo<TUser>(userList,5);
         model.addAttribute("pageInfo", pageInfo);
+        
+        //回显查询条件
+        model.addAttribute("searchParam", search);
         return "manager/permission/user";
+    }
+    
+    /**
+     * 批量删除
+     */
+    @RequestMapping("/delBatch")
+    public String delBatch(@RequestParam(value="ids")String ids){
+    			userService.deleteBatchOrSingle(ids);
+    	return "redirect:/permisson/user/findAllUser";
     }
 }

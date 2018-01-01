@@ -1,5 +1,6 @@
 package com.atguigu.scw.manager.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -74,7 +75,40 @@ public class UserServiceImpl implements UserService{
         List<TUser> userList = userMapper.selectByExample(null);
         return userList;
     }
-    
 
 
+    /**
+     * 按条件查询
+     */
+	@Override
+	public List<TUser> findUserByExample(TUserExample example) {
+		// TODO Auto-generated method stub
+		return userMapper.selectByExample(example);
+	}
+
+
+	/**
+	 * 批量删除用户
+	 */
+	@Override
+	public void deleteBatchOrSingle(String ids) {
+		// TODO Auto-generated method stub
+		if(!MyStringUtils.isEmpty(ids)){
+			if(ids.contains(",")){
+				String[] idStrings = ids.split(",");
+				List<Integer> idList = new ArrayList<Integer>();
+				for (String string : idStrings) {
+					idList.add(Integer.valueOf(string));
+				}
+				TUserExample example = new TUserExample();
+				Criteria criteria = example.createCriteria();
+				criteria.andIdIn(idList);
+				userMapper.deleteByExample(example);
+			}else{
+				userMapper.deleteByPrimaryKey(Integer.valueOf(ids));
+			}
+		}
+
+		
+	}
 }

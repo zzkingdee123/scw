@@ -42,20 +42,22 @@ table tbody td:nth-child(even) {
 						</h3>
 					</div>
 					<div class="panel-body">
-						<form class="form-inline" role="form" style="float: left;">
+						<form class="form-inline" role="form" style="float: left;"
+							action="${ctp }/permisson/user/findAllUser" method="post">
 							<div class="form-group has-feedback">
 								<div class="input-group">
 									<div class="input-group-addon">查询条件</div>
-									<input id="loginacct" class="form-control has-success" type="text"
+									<input id="loginacct" class="form-control has-success"
+										type="text" name="searchParam" value="${searchParam }"
 										placeholder="按账号查询">
 								</div>
 							</div>
-							<button id="selectBtn" type="button" class="btn btn-warning">
+							<button id="selectBtn" type="submit" class="btn btn-warning">
 								<i class="glyphicon glyphicon-search"></i> 查询
 							</button>
 						</form>
 						<button type="button" class="btn btn-danger"
-							style="float: right; margin-left: 10px;">
+							style="float: right; margin-left: 10px;" id="delBatch">
 							<i class=" glyphicon glyphicon-remove"></i> 删除
 						</button>
 						<button type="button" class="btn btn-primary"
@@ -69,7 +71,7 @@ table tbody td:nth-child(even) {
 								<thead>
 									<tr>
 										<th width="30">#</th>
-										<th width="30"><input type="checkbox"></th>
+										<th width="30"><input type="checkbox" id="checkAll"></th>
 										<th>账号</th>
 										<th>名称</th>
 										<th>邮箱地址</th>
@@ -81,7 +83,7 @@ table tbody td:nth-child(even) {
 									<c:forEach items="${pageInfo.list }" var="user">
 										<tr>
 											<td>${user.id }</td>
-											<td><input type="checkbox"></td>
+											<td><input type="checkbox" class="checkSingle" did="${user.id }"></td>
 											<td>${user.loginacct }</td>
 											<td>${user.username }</td>
 											<td>${user.email }</td>
@@ -103,6 +105,7 @@ table tbody td:nth-child(even) {
 									<tr>
 										<td colspan="6" align="center">
 											<ul class="pagination">
+												<!--页码发请求时需要带上过滤条件  -->
 												<li><a href="${ctp }/permisson/user/findAllUser?pn=1">首页</a></li>
 												<c:if test="${pageInfo.hasPreviousPage }">
 													<li><a
@@ -110,8 +113,7 @@ table tbody td:nth-child(even) {
 												</c:if>
 												<c:forEach items="${pageInfo.navigatepageNums }" var="pn">
 													<c:if test="${pn==pageInfo.pageNum }">
-														<li class="active"><a>${pn }<span
-																class="sr-only"></span></a></li>
+														<li class="active"><a>${pn }<span class="sr-only"></span></a></li>
 													</c:if>
 													<c:if test="${pn!=pageInfo.pageNum }">
 														<li><a
@@ -138,6 +140,7 @@ table tbody td:nth-child(even) {
 	</div>
 
 	<%@include file="/WEB-INF/includes/js.jsp"%>
+	<%@include file="/WEB-INF/includes/common-js.jsp" %>
 	<script type="text/javascript">
 		$(function() {
 			$(".list-group-item").click(function() {
@@ -157,16 +160,39 @@ table tbody td:nth-child(even) {
 		$("tbody .btn-primary").click(function() {
 			window.location.href = "edit.html";
 		});
-		
+
 		//菜单打开及被选中的红显
-		$("a[href='${ctp}/permisson/user/findAllUser']").css("color","red");
-		$("a[href='${ctp}/permisson/user/findAllUser']").parents(".list-group-item").removeClass("tree-closed");
-		$("a[href='${ctp}/permisson/user/findAllUser']").parent().parent('ul').show(10);
+		$("a[href='${ctp}/permisson/user/findAllUser']").css("color", "red");
+		$("a[href='${ctp}/permisson/user/findAllUser']").parents(
+				".list-group-item").removeClass("tree-closed");
+		$("a[href='${ctp}/permisson/user/findAllUser']").parent().parent('ul')
+				.show(100);
+
+		//给分页按钮加过滤参数
+		$(".pagination").find("a").click(function() {
+			var searchParam = $("input[name=searchParam]").val();
+			var newHref = $(this).attr("href") + "&searchParam=" + searchParam;
+			$(this).attr("href", newHref);
+		});
+	
+		//实现全选和单选
+		checkAllReverse($("#checkAll"), $(".checkSingle"));
 		
-		$("#selectBtn").click(function(){
-			var loginacct = $("#loginacct").val();
-			
-		})
+		//批量删除
+		$("#delBatch").click(function(){
+			//拿到被选的id
+			var ids="";
+			var delUrl="${ctp}/permisson/user/delBatch?ids=";
+		$(".checkSingle:checked").each(function(){
+			ids+=$(this).attr("did")+",";
+		});
+		//删除按钮跳转
+		delUrl+=ids.substring(0,ids.length-1);
+		if(confirm("确认删除"+ids.substring(0,ids.length-1)+"号会员")){
+		location.href=delUrl;
+		}
+		return false;
+		});
 	</script>
 </body>
 </html>
