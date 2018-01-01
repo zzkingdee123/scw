@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.atguigu.project.MD5Util;
 import com.atguigu.project.MyStringUtils;
+import com.atguigu.scw.manager.bean.TRole;
 import com.atguigu.scw.manager.bean.TUser;
 import com.atguigu.scw.manager.bean.TUserExample;
 import com.atguigu.scw.manager.bean.TUserExample.Criteria;
@@ -111,4 +112,5 @@ public class UserServiceImpl implements UserService{
 
 		
 	}
+	
 }

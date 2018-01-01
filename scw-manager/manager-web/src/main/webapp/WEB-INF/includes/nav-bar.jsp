@@ -5,7 +5,7 @@
 		<div class="navbar-header">
 			<div>
 				<a class="navbar-brand" style="font-size: 32px;" href="#">众筹平台 -
-					用户维护</a>
+					<%=pageContext.getAttribute("navinfo") %></a>
 			</div>
 		</div>
 		<div id="navbar" class="navbar-collapse collapse">

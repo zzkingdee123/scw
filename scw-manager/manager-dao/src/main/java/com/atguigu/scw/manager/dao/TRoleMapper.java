@@ -6,6 +6,16 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface TRoleMapper {
+	
+	/**
+	 * 按用户ID查角色
+	 * @param example
+	 * @return
+	 */
+	public List<TRole> getRoleByUser(@Param("id")Integer id);
+	
+	
+	//------------------
     long countByExample(TRoleExample example);
 
     int deleteByExample(TRoleExample example);

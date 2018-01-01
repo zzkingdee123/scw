@@ -29,6 +29,10 @@ table tbody td:nth-child(even) {
 
 <body>
 	<%@include file="/WEB-INF/includes/nav-bar.jsp"%>
+		<%
+		//导航条的标题
+		pageContext.setAttribute("navinfo", "用户维护");
+	%>
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-sm-3 col-md-2 sidebar">
@@ -88,7 +92,7 @@ table tbody td:nth-child(even) {
 											<td>${user.username }</td>
 											<td>${user.email }</td>
 											<td>
-												<button type="button" class="btn btn-success btn-xs">
+												<button type="button" class="btn btn-success btn-xs assignRoleBtn"  did="${user.id }">
 													<i class=" glyphicon glyphicon-check"></i>
 												</button>
 												<button type="button" class="btn btn-primary btn-xs">
@@ -154,12 +158,6 @@ table tbody td:nth-child(even) {
 				}
 			});
 		});
-		$("tbody .btn-success").click(function() {
-			window.location.href = "assignRole.html";
-		});
-		$("tbody .btn-primary").click(function() {
-			window.location.href = "edit.html";
-		});
 
 		//菜单打开及被选中的红显
 		$("a[href='${ctp}/permisson/user/findAllUser']").css("color", "red");
@@ -192,6 +190,14 @@ table tbody td:nth-child(even) {
 		location.href=delUrl;
 		}
 		return false;
+		});
+		
+		//分配权限
+		$(".assignRoleBtn").click(function() {
+			var id = $(this).attr("did");
+			//alert(id);
+			var permissionUrl = "${ctp}/permisson/user/toAssignRolePage?id="+id;
+			location.href=permissionUrl;
 		});
 	</script>
 </body>

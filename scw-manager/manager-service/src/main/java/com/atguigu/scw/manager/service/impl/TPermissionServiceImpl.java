@@ -53,7 +53,6 @@ public class TPermissionServiceImpl implements TPermissionService{
                     childsList.add(tPermission);
                 }
                 parentMenu.setChilds(childsList);
-                System.out.println(123);
             }
         }
         return parentMenuList;

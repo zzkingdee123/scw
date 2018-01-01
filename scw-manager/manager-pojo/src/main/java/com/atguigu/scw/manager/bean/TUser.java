@@ -1,6 +1,8 @@
 package com.atguigu.scw.manager.bean;
 
-public class TUser {
+import java.io.Serializable;
+
+public class TUser implements Serializable{
     private Integer id;
 
     private String loginacct;

@@ -1,21 +1,27 @@
 package com.atguigu.scw.manager.controller.permission;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.atguigu.project.MyStringUtils;
+import com.atguigu.scw.manager.bean.TRole;
 import com.atguigu.scw.manager.bean.TUser;
 import com.atguigu.scw.manager.bean.TUserExample;
 import com.atguigu.scw.manager.bean.TUserExample.Criteria;
 import com.atguigu.scw.manager.constant.Constants;
+import com.atguigu.scw.manager.service.RoleService;
+import com.atguigu.scw.manager.service.UserRoleService;
 import com.atguigu.scw.manager.service.UserService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -34,6 +40,12 @@ public class UserController {
 
     @Autowired
     UserService userService;
+    
+    @Autowired
+    RoleService roleService;
+    
+    @Autowired
+    UserRoleService userRoleService;
     /**
      * 用户注册
      * @Description (TODO这里用一句话描述这个方法的作用)
@@ -120,4 +132,55 @@ public class UserController {
     			userService.deleteBatchOrSingle(ids);
     	return "redirect:/permisson/user/findAllUser";
     }
+    
+    /**
+     * 查询用户拥有的角色
+     */
+    @RequestMapping("/toAssignRolePage")
+    public String toAssignRolePage(@RequestParam(value="id",defaultValue="")String uid,Model model ){
+    	//查出所有角色
+    	List<TRole> allRole = roleService.getAllRole();
+    	//查出这个人的角色
+    	List<TRole> userRole = roleService.getRoleByUser(Integer.valueOf(uid));
+    	
+    	//不包含的角色
+    	List<TRole> unRole  = new ArrayList<>();
+    	Map<Integer, TRole> map = new HashMap<>();
+    	for (TRole tRole : userRole) {
+    		map.put(tRole.getId(), tRole);
+		}
+    	for (TRole tRole : allRole) {
+			if(!map.containsKey(tRole.getId())){
+				unRole.add(tRole);
+			}
+		}
+    	
+    	model.addAttribute("userRole", userRole);
+    	model.addAttribute("unRole", unRole);
+    	return "manager/permission/assignRole";
+    }
+    
+    
+    /**
+     * 为用户添加角色
+     */
+    @ResponseBody
+    @RequestMapping("/addRoleToUser")
+    public String addRoleToUser(@RequestParam("rids")String rids,@RequestParam("uid") Integer uid){
+    	userRoleService.addRoleToUser(rids, uid);
+    	System.out.println("角色添加成功");
+    	return "";
+    }
+    
+    /**
+     * 删除用户角色
+     */
+    @ResponseBody
+    @RequestMapping("/deleteRoleFromUser")
+    public String deleteRoleFromUser(@RequestParam("rids")String rids,@RequestParam("uid") Integer uid) {
+    	userRoleService.deleteRoleFromUser(rids, uid);
+    	
+    	System.out.println("角色删除成功");
+		return "";
+	}
 }

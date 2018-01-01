@@ -3,6 +3,7 @@ package com.atguigu.scw.manager.service;
 
 import java.util.List;
 
+import com.atguigu.scw.manager.bean.TRole;
 import com.atguigu.scw.manager.bean.TUser;
 import com.atguigu.scw.manager.bean.TUserExample;
 
@@ -18,4 +19,5 @@ public interface UserService {
     public List<TUser> findUserByExample(TUserExample example);
 
 	public void deleteBatchOrSingle(String ids);
+
 }

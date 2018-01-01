@@ -1,8 +1,9 @@
 package com.atguigu.scw.manager.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class TPermission {
+public class TPermission implements Serializable{
     private Integer id;
 
     private Integer pid;
