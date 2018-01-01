@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.atguigu.scw.manager.bean.TRole;
+import com.atguigu.scw.manager.bean.TRoleExample;
 import com.atguigu.scw.manager.dao.TRoleMapper;
 import com.atguigu.scw.manager.service.RoleService;
 
@@ -32,6 +33,15 @@ public class RoleServiceImpl implements RoleService{
 	public List<TRole> getRoleByUser(Integer id) {
 		// TODO Auto-generated method stub
 		return roleMapper.getRoleByUser(id);
+	}
+
+	/**
+	 * 根据条件查询角色
+	 */
+	@Override
+	public List<TRole> getRoleByExample(TRoleExample example) {
+		// TODO Auto-generated method stub
+		return roleMapper.selectByExample(example);
 	}
 
 }
