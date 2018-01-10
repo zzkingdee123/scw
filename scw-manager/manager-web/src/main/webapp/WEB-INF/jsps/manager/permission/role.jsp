@@ -65,7 +65,8 @@
 				  <td><input type="checkbox"></td>
                   <td>${role.name }</td>
                   <td>
-				      <button type="button" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>
+                  <!-- modal -->
+				      <button type="button" class="btn btn-success btn-xs" data-toggle="modal" data-target="#myModal"><i class=" glyphicon glyphicon-check"></i></button>
 				      <button type="button" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>
 					  <button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>
 				  </td>
@@ -109,6 +110,24 @@
       </div>
     </div>
 
+<!-- 模态框 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">角色权限分配</h4>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 	<%@include file="/WEB-INF/includes/js.jsp"%>
         <script type="text/javascript">
             $(function () {
@@ -130,6 +149,14 @@
     			var newHref = $(this).attr("href") + "&searchParam=" + searchParam;
     			$(this).attr("href", newHref);
     		});
+    		
+    		//按钮悬停提示
+    		$(".glyphicon-check").
+            tooltip({
+                trigger:'hover',
+                html:true,
+                title:'权限分配'});
+    		
         </script>
   </body>
 </html>
