@@ -5,4 +5,6 @@
 	<script src="${ctp }/script/docs.min.js"></script>
 	<script src="${ctp }/script/back-to-top.js"></script>
 	<script src="${ctp }/plugin/jquery-validation-1.13.1/dist/jquery.validate.min.js"></script>
+	<script src="${ctp }/plugin/ztree/jquery.ztree.core.js"></script>
+
 	

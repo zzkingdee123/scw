@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.atguigu.scw.manager.bean.TPermission;
+import com.atguigu.scw.manager.bean.TPermissionExample;
+import com.atguigu.scw.manager.bean.TPermissionExample.Criteria;
 import com.atguigu.scw.manager.dao.TPermissionMapper;
 import com.atguigu.scw.manager.service.TPermissionService;
 
@@ -57,5 +59,16 @@ public class TPermissionServiceImpl implements TPermissionService{
         }
         return parentMenuList;
     }
-    
+
+	@Override
+	public List<TPermission> findPermissionByRoleId(Integer id) {
+		// TODO Auto-generated method stub
+		return tPermissionMapper.findPermissionByRoleId(id);
+	}
+
+	@Override
+	public List<TPermission> getAllPermission() {
+		// TODO Auto-generated method stub
+		return  tPermissionMapper.selectByExample(null);
+	}
 }

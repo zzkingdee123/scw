@@ -4,8 +4,8 @@
 	<div class="container-fluid">
 		<div class="navbar-header">
 			<div>
-				<a class="navbar-brand" style="font-size: 32px;" href="#">众筹平台 -
-					<%=pageContext.getAttribute("navinfo") %></a>
+				<a class="navbar-brand" style="font-size: 32px;" href="#">众筹平台 -${navinfo }
+				 </a>
 			</div>
 		</div>
 		<div id="navbar" class="navbar-collapse collapse">

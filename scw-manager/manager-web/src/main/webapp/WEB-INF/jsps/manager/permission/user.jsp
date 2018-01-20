@@ -28,11 +28,11 @@ table tbody td:nth-child(even) {
 </head>
 
 <body>
-	<%@include file="/WEB-INF/includes/nav-bar.jsp"%>
 		<%
 		//导航条的标题
 		pageContext.setAttribute("navinfo", "用户维护");
 	%>
+	<%@include file="/WEB-INF/includes/nav-bar.jsp"%>
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-sm-3 col-md-2 sidebar">
@@ -159,13 +159,6 @@ table tbody td:nth-child(even) {
 			});
 		});
 
-		//菜单打开及被选中的红显
-		$("a[href='${ctp}/permisson/user/findAllUser']").css("color", "red");
-		$("a[href='${ctp}/permisson/user/findAllUser']").parents(
-				".list-group-item").removeClass("tree-closed");
-		$("a[href='${ctp}/permisson/user/findAllUser']").parent().parent('ul')
-				.show(100);
-
 		//给分页按钮加过滤参数
 		$(".pagination").find("a").click(function() {
 			var searchParam = $("input[name=searchParam]").val();
@@ -199,6 +192,16 @@ table tbody td:nth-child(even) {
 			var permissionUrl = "${ctp}/permisson/user/toAssignRolePage?id="+id;
 			location.href=permissionUrl;
 		});
+		
+		
+		//被选中红显及树打开
+		changePageStyle("permisson/user/findAllUser");
+		
+
+
+	</script>
+	
+	<script type="text/javascript">
 	</script>
 </body>
 </html>

@@ -12,4 +12,12 @@ function checkAllReverse(check_all_button, check_single_button) {
 		check_all_button.prop("checked",check_single_button.filter(":checked").length == check_single_button.length);
 		});
 	}
+	
+function changePageStyle(url){
+	$("a[href='${ctp}/"+url+"']").css("color", "red");
+	$("a[href='${ctp}/"+url+"']").parents(
+			".list-group-item").removeClass("tree-closed");
+	$("a[href='${ctp}/"+url+"']").parent().parent('ul')
+			.show(100);
+}
 </script>

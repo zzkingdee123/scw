@@ -13,4 +13,8 @@ public interface TPermissionService {
      * @return
      */
     public List<TPermission> getAllMenu();
+
+	public List<TPermission> findPermissionByRoleId(Integer id);
+	
+	public List<TPermission> getAllPermission();
 }

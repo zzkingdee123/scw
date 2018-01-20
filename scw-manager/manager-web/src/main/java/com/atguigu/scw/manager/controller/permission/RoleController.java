@@ -49,4 +49,5 @@ public class RoleController {
 		model.addAttribute("searchParam", search);
 		return "manager/permission/role";
 	}
+	
 }
