@@ -29,9 +29,9 @@ table tbody td:nth-child(even) {
 </head>
 
 <body>
-		<%
-		//导航条的标题
-		pageContext.setAttribute("navinfo", "角色维护");
+	<%
+	    //导航条的标题
+				pageContext.setAttribute("navinfo", "角色维护");
 	%>
 	<%@include file="/WEB-INF/includes/nav-bar.jsp"%>
 	<div class="container-fluid">
@@ -157,19 +157,19 @@ table tbody td:nth-child(even) {
 				<div class="modal-body">
 					<div>
 						<ul id="permissionTree" class="ztree">
-							
+
 						</ul>
 					</div>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary">分配</button>
+					<button type="button" class="btn btn-primary" id="rpBtn">分配</button>
 				</div>
 			</div>
 		</div>
 	</div>
 	<%@include file="/WEB-INF/includes/js.jsp"%>
-	<%@include file="/WEB-INF/includes/common-js.jsp" %>
+	<%@include file="/WEB-INF/includes/common-js.jsp"%>
 	<script type="text/javascript">
 		$(function() {
 			$(".list-group-item").click(function() {
@@ -193,8 +193,7 @@ table tbody td:nth-child(even) {
 
 		//实现全选和单选
 		checkAllReverse($("#checkAll"), $(".checkSingle"));
-		
-		
+
 		//按钮悬停提示
 		$(".glyphicon-check").tooltip({
 			trigger : 'hover',
@@ -204,43 +203,90 @@ table tbody td:nth-child(even) {
 
 		//被选中红显及树打开
 		changePageStyle("permisson/role/findAllRole");
-		
+
 		//点击分配按钮弹出模态框权限树
 		$(".glyphicon-check").click(function() {
-			//1.查询选择角色的权限
+			//1.初始化权限树并勾中已有权限
 			var roleid = $(this).attr("roleid");
-					
-			initTree();
-			
-			var option={
-					backdrop:'static',
-					show:true
+			initTree(roleid);
+
+			//3.弹出模态框
+			var option = {
+				backdrop : 'static',
+				show : true
 			};
 			$('#myModal').modal(option);
+			$("#rpBtn").attr("rid",roleid);
 		});
-		
-		
-		function initTree(){
+
+		function addDiyDom(treeId, treeNode) {
+			//console.log(treeId);
+			//console.log(treeNod e);
+			$("#" + treeNode.tId + "_ico").removeClass();
+			$("#" + treeNode.tId + "_ico").before("<span class='"+treeNode.icon+"'></span>");
+		}
+
+		function initTree(roleid) {
 			var setting = {
-					data: {
-						simpleData: {
-							enable: true,
-							pIdKey:"pid"
-						}
-					}
-				};
-			
+				check : {
+					enable : true
+				},
+				data : {
+					simpleData : {
+						enable : true,
+						pIdKey : "pid"
+					},
+				key:{
+					url:"xurl"
+				}
+				},
+
+				view : {
+					addDiyDom : addDiyDom
+				}
+			};
+
 			/* 获取权限json */
-			$.getJSON("${ctp}/permisson/getAllPermission",function(zNodes){
-				console.log(zNodes);
-				$.each(zNodes,function(){
-					if(this.pid==0){
-					this.open=true;
+			$.getJSON("${ctp}/permisson/getAllPermission", function(zNodes) {
+				//console.log(zNodes);
+				$.each(zNodes, function() {
+					if (this.pid == 0) {
+						this.open = true;
 					}
 				})
-					$.fn.zTree.init($("#permissionTree"), setting, zNodes);
+				ztree = $.fn.zTree.init($("#permissionTree"), setting, zNodes);
+				checkedTree(roleid);
 			});
 		}
+
+		function checkedTree(roleid) {
+			$.getJSON("${ctp}/permisson/findPermissionByRoleId?roleid="
+					+ roleid, function(data) {
+				//console.log(data);
+				$.each(data,function(){
+					var node = ztree.getNodeByParam("id", this.id, null);
+					ztree.checkNode(node, true, null);
+				});
+
+			});
+		}
+		
+		//点击分配完成角色权限分配
+		$("#rpBtn").click(function(){
+			//1.选中所有被选的节点
+			var nodes = ztree.getCheckedNodes(true);
+			console.log(nodes);
+			var rid=$(this).attr("rid");
+			var pids="";
+			$.each(nodes,function(){
+				pids+=this.id+",";
+			});
+			
+			$.get("${ctp}/permisson/updateRolePermission?rid="+rid+"&pids="+pids,function(){
+				alert("分配成功");
+				$('#myModal').modal("hide");
+			});
+		});
 	</script>
 </body>
 </html>
