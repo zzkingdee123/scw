@@ -27,7 +27,7 @@
 	    //导航条的标题
 
 				
-				pageContext.setAttribute("navinfo", "许可111维护");
+				pageContext.setAttribute("navinfo", "许可维护111");
 
 	%>
 	<%@include file="/WEB-INF/includes/nav-bar.jsp"%>
